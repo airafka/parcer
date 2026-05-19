@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Excel JSON Packets</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="app-shell">
+    <section class="workspace">
+        <div class="panel upload-panel">
+            <div class="brand-row">
+                <div>
+                    <h1>Excel JSON Packets</h1>
+                    <p>Загрузите Excel-файл ЭТРАН и получите готовые JSON-пакеты.</p>
+                </div>
+                <span class="status-pill" id="status">Готов</span>
+            </div>
+
+            <form id="uploadForm" class="upload-form">
+                <label class="file-drop" for="fileInput" id="dropZone">
+                    <input id="fileInput" name="file" type="file" accept=".xlsx,.xls" required>
+                    <span class="file-icon">XLS</span>
+                    <span class="file-main" id="fileName">Выберите Excel-файл</span>
+                    <span class="file-sub">или перетащите его сюда</span>
+                </label>
+
+                <div class="controls">
+                    <button type="submit" id="submitButton">Сформировать JSON</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="summary-grid" id="summaryGrid" hidden>
+            <div>
+                <span>Накладных</span>
+                <strong id="waybillsCount">0</strong>
+            </div>
+            <div>
+                <span>КТК</span>
+                <strong id="containersCount">0</strong>
+            </div>
+            <div>
+                <span>Вагонов</span>
+                <strong id="carriagesCount">0</strong>
+            </div>
+            <div>
+                <span>Грузов</span>
+                <strong id="productsCount">0</strong>
+            </div>
+        </div>
+
+        <section class="panel waybill-panel" id="waybillPanel" hidden>
+            <div class="waybill-head">
+                <h2>Накладные</h2>
+            </div>
+            <div class="waybill-table">
+                <div class="waybill-table-head">
+                    <span>Номер накладной</span>
+                    <span>Вагонов</span>
+                    <span>КТК</span>
+                    <span>Грузов</span>
+                </div>
+                <div id="waybillList"></div>
+            </div>
+        </section>
+
+        <section class="panel result-panel" id="resultPanel" hidden>
+            <div class="result-head">
+                <h2>JSON-пакеты</h2>
+                <div class="result-actions">
+                    <button type="button" id="downloadSelectedButton">Скачать JSON</button>
+                    <button type="button" id="downloadAllButton">Скачать все</button>
+                </div>
+            </div>
+            <div class="packet-list" id="packetList"></div>
+            <pre id="preview" class="preview"></pre>
+        </section>
+    </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

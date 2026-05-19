@@ -1,0 +1,379 @@
+:root {
+    color-scheme: light;
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --ink: #16202a;
+    --muted: #66727f;
+    --line: #d9e0e7;
+    --accent: #1f7a5a;
+    --accent-strong: #155f46;
+    --warn: #9f5b00;
+    --shadow: 0 18px 50px rgba(22, 32, 42, 0.09);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, #edf2f5 0%, var(--bg) 46%, #e9eef1 100%);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app-shell {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0;
+}
+
+.workspace {
+    display: grid;
+    gap: 18px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.upload-panel {
+    padding: 24px;
+}
+
+.brand-row,
+.result-head,
+.waybill-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+h1,
+h2,
+p {
+    margin: 0;
+}
+
+h1 {
+    font-size: 30px;
+    line-height: 1.15;
+}
+
+h2 {
+    font-size: 18px;
+}
+
+p {
+    margin-top: 8px;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.status-pill {
+    flex: 0 0 auto;
+    min-width: 96px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    text-align: center;
+    color: var(--muted);
+    background: #f8fafb;
+    font-size: 13px;
+}
+
+.status-pill.is-busy {
+    color: var(--warn);
+    border-color: #f1c681;
+    background: #fff7e8;
+}
+
+.status-pill.is-done {
+    color: var(--accent-strong);
+    border-color: #8bd1b8;
+    background: #e9f8f2;
+}
+
+.status-pill.is-error {
+    color: #9d2525;
+    border-color: #e7a4a4;
+    background: #fff0f0;
+}
+
+.upload-form {
+    display: grid;
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.file-drop {
+    display: grid;
+    place-items: center;
+    min-height: 190px;
+    padding: 26px;
+    border: 1px dashed #9fb0be;
+    border-radius: 8px;
+    background: #f8fafb;
+    cursor: pointer;
+    text-align: center;
+}
+
+.file-drop.is-dragover {
+    border-color: var(--accent);
+    background: #edf8f3;
+}
+
+.file-drop input {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+}
+
+.file-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.file-main {
+    margin-top: 14px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.file-sub {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: minmax(220px, 320px);
+    gap: 12px;
+    align-items: end;
+    justify-content: end;
+}
+
+label span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--ink);
+    background: white;
+}
+
+button {
+    height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+    background: var(--accent);
+    cursor: pointer;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: var(--accent-strong);
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.62;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.summary-grid div {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.summary-grid span {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.summary-grid strong {
+    display: block;
+    margin-top: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 22px;
+}
+
+.result-panel,
+.waybill-panel {
+    padding: 18px;
+}
+
+.waybill-table {
+    margin-top: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.waybill-table-head,
+.waybill-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) repeat(3, minmax(88px, 120px));
+    gap: 10px;
+    align-items: center;
+    padding: 12px 14px;
+}
+
+.waybill-table-head {
+    color: var(--muted);
+    background: #f8fafb;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.waybill-row {
+    width: 100%;
+    height: auto;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    color: var(--ink);
+    background: white;
+    text-align: left;
+    font-weight: 700;
+}
+
+.waybill-row:hover,
+.waybill-row.is-active {
+    background: #eef4f1;
+    color: var(--accent-strong);
+}
+
+.waybill-row span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.packet-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.packet-item {
+    display: flex;
+    gap: 6px;
+}
+
+.packet-list button {
+    height: 36px;
+    background: #eef4f1;
+    color: var(--accent-strong);
+    border: 1px solid #c8ddd4;
+}
+
+.packet-list button.is-active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.packet-list .packet-download {
+    background: white;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+.preview {
+    min-height: 280px;
+    max-height: 520px;
+    margin: 16px 0 0;
+    padding: 16px;
+    overflow: auto;
+    border: 1px solid #202b34;
+    border-radius: 8px;
+    background: #111820;
+    color: #d8f3e7;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+    .app-shell {
+        width: min(100% - 20px, 1120px);
+        padding: 14px 0;
+    }
+
+    .upload-panel,
+    .result-panel {
+        padding: 16px;
+    }
+
+    .brand-row,
+    .result-head,
+    .waybill-head {
+        display: grid;
+    }
+
+    .controls,
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .waybill-table-head,
+    .waybill-row {
+        grid-template-columns: 1fr repeat(3, 58px);
+        padding: 10px;
+        gap: 8px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
