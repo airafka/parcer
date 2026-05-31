@@ -27,6 +27,18 @@
                 </label>
 
                 <div class="controls">
+                    <label>
+                        <span>URL Datareon</span>
+                        <input id="datareonUrl" name="datareonUrl" type="text" placeholder="{{datareon_url}}">
+                    </label>
+                    <label>
+                        <span>Логин</span>
+                        <input id="datareonLogin" name="datareonLogin" type="text" placeholder="{{datareon_login}}">
+                    </label>
+                    <label>
+                        <span>Пароль</span>
+                        <input id="datareonPassword" name="datareonPassword" type="password" placeholder="{{datareon_password}}">
+                    </label>
                     <button type="submit" id="submitButton">Сформировать JSON</button>
                 </div>
             </form>
@@ -54,8 +66,11 @@
         <section class="panel waybill-panel" id="waybillPanel" hidden>
             <div class="waybill-head">
                 <h2>Накладные</h2>
+                <button type="button" class="toggle-button" id="waybillToggleButton" aria-expanded="false">
+                    Показать
+                </button>
             </div>
-            <div class="waybill-table">
+            <div class="waybill-table" id="waybillTable" hidden>
                 <div class="waybill-table-head">
                     <span>Номер накладной</span>
                     <span>Вагонов</span>
@@ -71,6 +86,7 @@
                 <h2>JSON-пакеты</h2>
                 <div class="result-actions">
                     <button type="button" id="downloadSelectedButton">Скачать JSON</button>
+                    <button type="button" id="downloadPostmanButton">Скачать Postman</button>
                     <button type="button" id="downloadAllButton">Скачать все</button>
                 </div>
             </div>

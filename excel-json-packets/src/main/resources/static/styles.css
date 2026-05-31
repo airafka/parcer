@@ -66,6 +66,13 @@ input {
     justify-content: flex-end;
 }
 
+.toggle-button {
+    height: 36px;
+    background: #eef4f1;
+    color: var(--accent-strong);
+    border: 1px solid #c8ddd4;
+}
+
 h1,
 h2,
 p {
@@ -173,7 +180,7 @@ p {
 
 .controls {
     display: grid;
-    grid-template-columns: minmax(220px, 320px);
+    grid-template-columns: minmax(260px, 1fr) minmax(160px, 220px) minmax(160px, 220px) auto;
     gap: 12px;
     align-items: end;
     justify-content: end;
@@ -187,6 +194,7 @@ label span {
 }
 
 input[type="text"],
+input[type="password"],
 input[type="number"] {
     width: 100%;
     height: 44px;

@@ -49,7 +49,8 @@ public class ExcelReader {
 
         try (InputStream inputStream = Files.newInputStream(inputFile);
              Workbook workbook = WorkbookFactory.create(inputStream)) {
-            return workbook.getSheet("Накладная") != null && workbook.getSheet("Свод данных") != null;
+            return resolveEtranSheet(workbook, "Накладная", "Накладные") != null
+                    && resolveEtranSheet(workbook, "Свод данных") != null;
         }
     }
 
@@ -60,10 +61,10 @@ public class ExcelReader {
 
         try (InputStream inputStream = Files.newInputStream(inputFile);
              Workbook workbook = WorkbookFactory.create(inputStream)) {
-            Sheet invoiceSheet = workbook.getSheet("Накладная");
-            Sheet summarySheet = workbook.getSheet("Свод данных");
+            Sheet invoiceSheet = resolveEtranSheet(workbook, "Накладная", "Накладные");
+            Sheet summarySheet = resolveEtranSheet(workbook, "Свод данных");
             if (invoiceSheet == null || summarySheet == null) {
-                throw new IllegalArgumentException("ETRAN template must contain sheets: Накладная, Свод данных.");
+                throw new IllegalArgumentException("ETRAN template must contain sheets: Накладная/Накладные, Свод данных.");
             }
 
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
@@ -89,6 +90,16 @@ public class ExcelReader {
             }
             return result;
         }
+    }
+
+    private Sheet resolveEtranSheet(Workbook workbook, String... sheetNames) {
+        for (String sheetName : sheetNames) {
+            Sheet sheet = workbook.getSheet(sheetName);
+            if (sheet != null) {
+                return sheet;
+            }
+        }
+        return null;
     }
 
     private Sheet resolveSheet(Workbook workbook, String sheetName) {

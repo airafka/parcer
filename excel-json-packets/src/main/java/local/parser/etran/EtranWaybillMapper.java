@@ -2,6 +2,8 @@ package local.parser.etran;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
@@ -11,6 +13,7 @@ import java.util.Set;
 
 public class EtranWaybillMapper {
     public List<Map<String, Object>> map(List<Map<String, Object>> etranRows) {
+        String createdAt = Instant.now().truncatedTo(ChronoUnit.SECONDS).toString();
         Map<String, List<Map<String, Object>>> groups = new LinkedHashMap<>();
         for (Map<String, Object> etranRow : etranRows) {
             groups.computeIfAbsent(waybillGroupKey(etranRow), ignored -> new ArrayList<>()).add(etranRow);
@@ -18,13 +21,13 @@ public class EtranWaybillMapper {
 
         List<Map<String, Object>> packages = new ArrayList<>();
         for (List<Map<String, Object>> rows : groups.values()) {
-            packages.add(mapGroup(rows, hasMultipleContainers(rows)));
+            packages.add(mapGroup(rows, hasMultipleContainers(rows), createdAt));
         }
         return packages;
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, Object> mapGroup(List<Map<String, Object>> etranRows, boolean hasMultipleContainers) {
+    private Map<String, Object> mapGroup(List<Map<String, Object>> etranRows, boolean hasMultipleContainers, String createdAt) {
         Map<String, Object> etranRow = etranRows.get(0);
         Map<String, Object> invoice = safeMap((Map<String, Object>) etranRow.get("Накладная"));
         Map<String, Object> summary = safeMap((Map<String, Object>) etranRow.get("Свод данных"));
@@ -38,7 +41,7 @@ public class EtranWaybillMapper {
         waybill.put("shipment_speed", null);
         waybill.put("form_type", null);
         waybill.put("delivery_deadline", "2026-04-16T00:00:00Z");
-        waybill.put("waybill_created_at", "2026-03-06T11:29:57Z");
+        waybill.put("waybill_created_at", createdAt);
         waybill.put("submitted_at", "2026-03-30T02:55:27Z");
         waybill.put("approved_at", "2026-03-06T11:35:58Z");
         waybill.put("accepted_at", "2026-03-30T11:39:55Z");
@@ -147,7 +150,7 @@ public class EtranWaybillMapper {
     private Map<String, Object> product(Map<String, Object> summary) {
         Map<String, Object> product = new LinkedHashMap<>();
         product.put("etsng_name", null);
-        product.put("etsng_code", value(summary.get("Код груза ЕТСНГ")));
+        product.put("etsng_code", etsngCode(summary.get("Код груза ЕТСНГ")));
         product.put("gng_code", null);
         product.put("cargo_full_name", null);
         product.put("additional", null);
@@ -176,7 +179,7 @@ public class EtranWaybillMapper {
         container.put("carriage_number", value(summary.get("Номер вагона")));
         container.put("container_number", value(summary.get("Номер КТК")));
         container.put("lifting_capacity", divideByThousand(summary.get("Грузоподъемность КТК, кг")));
-        container.put("weight", divideByHundred(summary.get("Масса тары, кг")));
+        container.put("weight", value(summary.get("Масса тары, кг")));
         container.put("sending_request_number", null);
         container.put("supply_request_number", null);
         container.put("owner", null);
@@ -296,6 +299,15 @@ public class EtranWaybillMapper {
     private Object value(Object sourceValue) {
         String value = stringValue(sourceValue);
         return value == null || value.isBlank() ? null : value;
+    }
+
+    private Object etsngCode(Object sourceValue) {
+        String value = stringValue(sourceValue);
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String firstPart = value.split("\\s+", 2)[0];
+        return firstPart.replaceAll("\\D", "");
     }
 
     private String stringValue(Object value) {
