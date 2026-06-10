@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: excel-json-packets
+    runtime: docker
+    rootDir: excel-json-packets
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /

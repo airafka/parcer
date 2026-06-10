@@ -160,7 +160,7 @@ public class ExcelReader {
                     continue;
                 }
 
-                Object value = readCellValue(row.getCell(columnIndex), evaluator, formatter);
+                Object value = normalizeValue(header, readCellValue(row.getCell(columnIndex), evaluator, formatter));
                 if (value != null) {
                     item.put(header, value);
                 }
@@ -190,6 +190,27 @@ public class ExcelReader {
             return null;
         }
         return header.trim().replaceAll("\\*+$", "").trim();
+    }
+
+    private Object normalizeValue(String header, Object value) {
+        if (!isStationCodeHeader(header)) {
+            return value;
+        }
+        return digitsOnly(value);
+    }
+
+    private boolean isStationCodeHeader(String header) {
+        return "ЕСР станции назначения".equalsIgnoreCase(header)
+                || "ЕСР станции отправления".equalsIgnoreCase(header);
+    }
+
+    private String digitsOnly(Object value) {
+        String digits = stringValue(value);
+        if (digits == null) {
+            return null;
+        }
+        digits = digits.replaceAll("\\D", "");
+        return digits.isBlank() ? null : digits;
     }
 
     private String stringValue(Object value) {

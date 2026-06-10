@@ -49,10 +49,10 @@ public class EtranWaybillMapper {
         waybill.put("departure_at", "2026-03-30T11:57:50Z");
         waybill.put("departure_country", null);
         waybill.put("departure_station", null);
-        waybill.put("departure_station_code", value(invoice.get("ЕСР станции отправления")));
+        waybill.put("departure_station_code", stationCode(invoice.get("ЕСР станции отправления")));
         waybill.put("destination_country", null);
         waybill.put("destination_station", null);
-        waybill.put("destination_station_code", value(invoice.get("ЕСР станции назначения")));
+        waybill.put("destination_station_code", stationCode(invoice.get("ЕСР станции назначения")));
         waybill.put("shipper_name", null);
         waybill.put("shipper_address", null);
         waybill.put("shipper_tgnl", null);
@@ -308,6 +308,15 @@ public class EtranWaybillMapper {
         }
         String firstPart = value.split("\\s+", 2)[0];
         return firstPart.replaceAll("\\D", "");
+    }
+
+    private Object stationCode(Object sourceValue) {
+        String value = stringValue(sourceValue);
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String digits = value.replaceAll("\\D", "");
+        return digits.isBlank() ? null : digits;
     }
 
     private String stringValue(Object value) {
