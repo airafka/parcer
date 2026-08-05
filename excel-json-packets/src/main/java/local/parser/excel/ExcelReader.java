@@ -214,7 +214,7 @@ public class ExcelReader {
     }
 
     private String stringValue(Object value) {
-        return value == null ? null : value.toString().trim();
+        return value == null ? null : value.toString().replace('\u00A0', ' ').trim();
     }
 
     private boolean isRowEmpty(Row row, DataFormatter formatter, FormulaEvaluator evaluator) {

@@ -35,7 +35,7 @@ public class EtranWaybillMapper {
         Map<String, Object> waybill = new LinkedHashMap<>();
         waybill.put("waybill_status", "В пути");
         waybill.put("waybill_type", null);
-        waybill.put("waybill_number", value(invoice.get("Номер")));
+        waybill.put("waybill_number", value(waybillNumber(invoice, summary)));
         waybill.put("waybill_identifier", value(invoice.get("Идентификатор")));
         waybill.put("shipment_type", null);
         waybill.put("shipment_speed", null);
@@ -320,7 +320,7 @@ public class EtranWaybillMapper {
     }
 
     private String stringValue(Object value) {
-        return value == null ? null : value.toString().trim();
+        return value == null ? null : value.toString().replace('\u00A0', ' ').trim();
     }
 
     private String firstString(Object first, Object second) {
