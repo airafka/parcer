@@ -183,7 +183,9 @@ public class EtranWaybillMapper {
         container.put("sending_request_number", null);
         container.put("supply_request_number", null);
         container.put("owner", null);
-        container.put("container_length", mapContainerLength(summary.get("Тип КТК")));
+        container.put("etran_container_type_id", 10);
+        container.put("length", mapContainerLength(summary.get("Тип КТК")));
+        container.put("iso", 8);
         container.put("weight_gross", null);
         container.put("weight_net", value(summary.get("Масса нетто  КТК, кг")));
         return container;
