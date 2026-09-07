@@ -119,6 +119,7 @@ public class EtranWaybillMapper {
         Map<String, Object> carriage = new LinkedHashMap<>();
         carriage.put("railway_number", value(summary.get("Номер вагона")));
         carriage.put("sort", mapCarriageSort(summary.get("Род вагона")));
+        carriage.put("sort_id", 30);
         carriage.put("railway_lifting_capacity", divideByThousand(summary.get("Грузоподъемность вагона, кг")));
         carriage.put("railway_volume", null);
         carriage.put("axles_count", null);
@@ -132,6 +133,7 @@ public class EtranWaybillMapper {
         carriage.put("model", null);
         carriage.put("date_of_next_repair", null);
         carriage.put("railway_weight", null);
+        carriage.put("wagon_lenght", 29);
         return carriage;
     }
 
