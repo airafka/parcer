@@ -1,7 +1,6 @@
 package local.parser.etran;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -118,22 +117,8 @@ public class EtranWaybillMapper {
     private Map<String, Object> railwayCarriage(Map<String, Object> summary) {
         Map<String, Object> carriage = new LinkedHashMap<>();
         carriage.put("railway_number", value(summary.get("Номер вагона")));
-        carriage.put("sort", mapCarriageSort(summary.get("Род вагона")));
-        carriage.put("sort_id", 30);
-        carriage.put("railway_lifting_capacity", divideByThousand(summary.get("Грузоподъемность вагона, кг")));
-        carriage.put("railway_volume", null);
-        carriage.put("axles_count", null);
-        carriage.put("ownership", null);
-        carriage.put("renter", null);
-        carriage.put("previously_transported", null);
-        carriage.put("railway_weight_gross", null);
-        carriage.put("railway_weight_net", null);
-        carriage.put("place_count", null);
-        carriage.put("railway_length", null);
-        carriage.put("model", null);
-        carriage.put("date_of_next_repair", null);
-        carriage.put("railway_weight", null);
-        carriage.put("wagon_lenght", 29);
+        carriage.put("type_id", mapCarriageType(summary.get("Род вагона")));
+        carriage.put("railway_lifting_capacity", numberValue(summary.get("Грузоподъемность вагона, кг")));
         return carriage;
     }
 
@@ -180,16 +165,10 @@ public class EtranWaybillMapper {
         Map<String, Object> container = new LinkedHashMap<>();
         container.put("carriage_number", value(summary.get("Номер вагона")));
         container.put("container_number", value(summary.get("Номер КТК")));
-        container.put("lifting_capacity", divideByThousand(summary.get("Грузоподъемность КТК, кг")));
+        container.put("container_type", mapContainerType(summary.get("Тип КТК")));
+        container.put("lifting_capacity", numberValue(summary.get("Грузоподъемность КТК, кг")));
         container.put("weight", value(summary.get("Масса тары, кг")));
-        container.put("sending_request_number", null);
-        container.put("supply_request_number", null);
-        container.put("owner", null);
-        container.put("etran_container_type_id", 10);
-        container.put("length", mapContainerLength(summary.get("Тип КТК")));
-        container.put("iso", 8);
-        container.put("weight_gross", null);
-        container.put("weight_net", value(summary.get("Масса нетто  КТК, кг")));
+        container.put("ISO", "5");
         return container;
     }
 
@@ -249,55 +228,47 @@ public class EtranWaybillMapper {
         return item;
     }
 
-    private Object mapCarriageSort(Object sourceValue) {
+    private Object mapCarriageType(Object sourceValue) {
         String value = stringValue(sourceValue);
         if (value == null) {
             return null;
         }
-        if ("Платформа 80 - футов".equalsIgnoreCase(value)) {
-            return "ПЛ для КТК длиной  свыше  25,5";
+
+        String compact = value.toLowerCase()
+                .replaceAll("[\\s\\-–—]", "");
+        if (compact.matches("платформа(40|60|80)футов")) {
+            String feet = compact.replaceAll("\\D", "");
+            return "Платформа " + feet + " - футов";
         }
-        if ("Платформа 60 - футов".equalsIgnoreCase(value)) {
-            return "ПЛ для КТК длиной  19,62";
-        }
-        if ("Платформа 40 - футов".equalsIgnoreCase(value)) {
-            return "Пл. для КТК, колесн. техн.и конт.-цистер";
-        }
-        return value;
+        return value.replaceAll("\\s+", " ");
     }
 
-    private Object mapContainerLength(Object sourceValue) {
+    private Object mapContainerType(Object sourceValue) {
         String value = stringValue(sourceValue);
         if (value == null) {
             return null;
         }
-        if ("Стандартный 40".equalsIgnoreCase(value)) {
-            return "40";
+
+        String compact = value.replaceAll("[\\s\\-]", "").toLowerCase();
+        if ("стандартный40".equals(compact)) {
+            return "STANDARD_40";
         }
-        if ("Стандартный 20".equalsIgnoreCase(value)) {
-            return "20";
+        if ("стандартный20".equals(compact)) {
+            return "STANDARD_20";
         }
-        return value;
+        return null;
     }
 
-    private Object divideByThousand(Object sourceValue) {
-        return divide(sourceValue, 1000);
-    }
-
-    private Object divideByHundred(Object sourceValue) {
-        return divide(sourceValue, 100);
-    }
-
-    private Object divide(Object sourceValue, int divisor) {
+    private Object numberValue(Object sourceValue) {
         BigDecimal value = decimalValue(sourceValue);
         if (value == null) {
             return null;
         }
-        BigDecimal result = value.divide(BigDecimal.valueOf(divisor), 3, RoundingMode.HALF_UP).stripTrailingZeros();
-        if (result.scale() <= 0) {
-            return result.longValue();
+        BigDecimal normalized = value.stripTrailingZeros();
+        if (normalized.scale() <= 0) {
+            return normalized.longValue();
         }
-        return result.doubleValue();
+        return normalized.doubleValue();
     }
 
     private Object value(Object sourceValue) {
@@ -308,7 +279,7 @@ public class EtranWaybillMapper {
     private Object etsngCode(Object sourceValue) {
         String value = stringValue(sourceValue);
         if (value == null || value.isBlank()) {
-            return null;
+            return "391498";
         }
         String firstPart = value.split("\\s+", 2)[0];
         return firstPart.replaceAll("\\D", "");

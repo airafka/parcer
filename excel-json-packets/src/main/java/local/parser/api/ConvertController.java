@@ -49,7 +49,12 @@ public class ConvertController {
                     ? etranWaybillMapper.map(excelReader.readEtranTemplate(tempFile))
                     : excelReader.read(tempFile, normalizedSheetName);
             if (isEtranTemplate) {
-                List<PacketFile> packets = List.of(new PacketFile("waybill-packages.json", rows));
+                List<PacketFile> packets = java.util.stream.IntStream.range(0, rows.size())
+                        .mapToObj(index -> new PacketFile(
+                                "waybill-%04d.json".formatted(index + 1),
+                                rows.get(index)
+                        ))
+                        .toList();
                 return new ConvertResponse(file.getOriginalFilename(), rows.size(), packets.size(), packets);
             }
 
